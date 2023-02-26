@@ -47,7 +47,7 @@ jobs:
           name: Build front-end
           working_directory: ./frontend
           command: |
-            cd front-end
+            cd frontend
             npm install
             npm run build
       - save_cache:
