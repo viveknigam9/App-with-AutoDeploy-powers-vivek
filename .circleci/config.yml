@@ -315,10 +315,10 @@ workflows:
             - configure-infrastructure
       - deploy-frontend:
           requires:
-            - run-migration
+            - run-migrations
       - deploy-backend:
           requires:
-            - run-migration
+            - run-migrations
       - smoke-test:
           requires:
             - deploy-backend
