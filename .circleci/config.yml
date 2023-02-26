@@ -45,6 +45,7 @@ jobs:
             - frontend-build
       - run:
           name: Build front-end
+          working_directory: ./frontend
           command: |
             cd front-end
             npm install
@@ -64,6 +65,7 @@ jobs:
             - backend-build
       - run:
           name: Back-end build
+          working_directory: ./backend
           command: |
             npm i
             npm run build
