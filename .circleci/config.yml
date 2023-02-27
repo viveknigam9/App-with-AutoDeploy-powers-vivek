@@ -68,8 +68,6 @@ jobs:
             cd backend
             npm install
             npm run build
-            #cp .env dist/.env
-            #pwd && ls -lahtr
       - save_cache:
           paths:
             - backend/node_modules
@@ -80,19 +78,30 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
+      - restore_cache:
+          keys:
+            - frontend-build
+      - run:
+          name: Testing Frontend
+          command: |
+            cd frontend
+            npm install
+            npm run test
                 
   test-backend:
     docker:
       - image: circleci/node:13.8.0
-      # Docker image here
     steps:
       - checkout
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
+      - restore_cache:
+          keys:
+            - backend-build
+      - run:
+          name: Testing Backend
+          command: |
+            cd backend
+            npm install
+            npm run test
             
   scan-frontend:
     docker:
