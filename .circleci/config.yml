@@ -67,10 +67,11 @@ jobs:
           name: Back-end build
           working_directory: ./backend
           command: |
-            npm i
+            cd backend
+            npm install
             npm run build
-            cp .env dist/.env
-            pwd && ls -lahtr
+            #cp .env dist/.env
+            #pwd && ls -lahtr
       - save_cache:
           paths:
             - backend/node_modules
