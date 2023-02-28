@@ -236,6 +236,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            apk add --update --no-cache tar gzip ansible 
+            pip3 install awscli
             # your code here
       - run:
           name: Get backend url
@@ -267,6 +269,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            apk add --update --no-cache tar gzip ansible 
+            pip3 install awscli
             # your code here
       - run:
           name: Deploy backend
@@ -282,21 +286,44 @@ jobs:
       # Lightweight Docker image 
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
+            apk add --update --no-cache curl npm 
+            pip3 install awscli
             # your code here
       - run:
           name: Get backend url
           command: |
-            # your code here
+            BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            API_URL="http://${BACKEND_IP}:3030"
+            curl "${API_URL}/api/status"
       - run:
           name: Backend smoke test.
           command: |
+            #Fetch and prepare the BACKEND_IP env var
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
+            then
+              return 0
+            else
+              return 1
+            fi
             # your code here
       - run:
           name: Frontend smoke test.
           command: |
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-west-2.amazonaws.com"
+            echo ${URL}
+            if curl -s ${URL} | grep "Welcome"
+            then
+              exit 0
+            else
+              exit 1
+            fi   
             # your code here
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
