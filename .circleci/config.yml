@@ -144,7 +144,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: yum install -y tar gz gzip
+      - run: yum install -y tar gzip
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -169,10 +169,15 @@ jobs:
             --filters Name=tag:aws:cloundformation:stack-name=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
             --output text) >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
+            # to test
+            #             aws cloudformation describe-stacks \
+            #                         --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            #                                     --query "Stacks[0].Outputs[0].OutputValue" \
+            #                                                 --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - .circleci/ansible/inventory.txt
+            - project/.circleci/ansible/inventory.txt
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
