@@ -223,6 +223,7 @@ jobs:
             cd backend
             npm install
             npm run migrations > migrations_dump.txt
+            cat migration_dump.txt
       - run:
           name: Send migration results to memstash
           command: |
@@ -231,7 +232,6 @@ jobs:
               # If you are using memstash.io, generate the token "7933fe63-4687-4fa1-8426-aa25aa1730ec" on the website
               curl -H "Content-Type: text/plain" -H "token: 7933fe63-4687-4fa1-8426-aa25aa1730ec" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
             fi
-            exit 1
             # Your code here
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
