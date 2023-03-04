@@ -207,13 +207,13 @@ jobs:
       # Docker image here that supports NodeJS
     steps:
       - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            sudo apt install -y tar gzip curl
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip -qq awscliv2.zip
-            sudo ./aws/install
+        #- run:
+        # name: Install dependencies
+        # command: |
+        #   sudo apt install -y tar gzip curl
+        #   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        #   unzip -qq awscliv2.zip
+        #   sudo ./aws/install
       - restore_cache:
           keys:
             - backend-build
