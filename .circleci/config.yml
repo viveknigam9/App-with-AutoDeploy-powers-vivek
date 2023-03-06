@@ -232,7 +232,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli
+      - image: sleavely/node-awscli:14.x
       # Docker image here that supports AWS CLI
     steps:
       - checkout
@@ -261,7 +261,7 @@ jobs:
                     
   deploy-backend:
     docker:
-      - image: amazon/aws-cli # Docker image here that supports Ansible
+      - image: sleavely/node-awscli:14.x # Docker image here that supports Ansible
     steps:
       - checkout
       - add_ssh_keys:
