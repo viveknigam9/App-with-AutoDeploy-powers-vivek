@@ -232,11 +232,15 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: sleavely/node-awscli:14.x
+      - image: python:3.7-alpine3.16
       # Docker image here that supports AWS CLI
     steps:
       - checkout
-      - run: yum install -y tar gzip npm
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update --no-cache tar gzip ansible 
+            pip3 install awscli
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -261,7 +265,7 @@ jobs:
                     
   deploy-backend:
     docker:
-      - image: sleavely/node-awscli:14.x # Docker image here that supports Ansible
+      - image: python:3.7-alpine3.16
     steps:
       - checkout
       - add_ssh_keys:
@@ -270,7 +274,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install -y tar gzip ansible  npm
+            apk add --update --no-cache tar gzip ansible 
+            pip3 install awscli
       - attach_workspace:
           at: ~/
       - run:
