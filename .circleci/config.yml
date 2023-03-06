@@ -239,7 +239,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update --no-cache tar gzip ansible 
+            apk add --update --no-cache tar gzip ansible npm
             pip3 install awscli
       - restore_cache:
           keys: [frontend-build]
@@ -274,7 +274,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update --no-cache tar gzip ansible 
+            apk add --update --no-cache tar gzip ansible npm
             pip3 install awscli
       - attach_workspace:
           at: ~/
