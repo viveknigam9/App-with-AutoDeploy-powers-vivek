@@ -27,13 +27,13 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
+            SUCCESS=$(curl -H "token: e52b52de-ee26-41a5-86e8-e8dcc3d995a5" --request GET https://api.memstash.io/values/migration_<< parameters.workflow_id >>)
             SUCCESS = 1
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
               npm install
               npm run migrations:revert
-              exit 1
             fi
             
 jobs:
@@ -340,9 +340,9 @@ jobs:
             echo ${URL}
             if curl -s ${URL} | grep "Welcome"
             then
-              exit 1
+              return 1
             else
-              exit 1
+              return 1
             fi   
             # your code here
       # Here's where you will add some code to rollback on failure  
