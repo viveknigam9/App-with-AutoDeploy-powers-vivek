@@ -236,7 +236,7 @@ jobs:
       # Docker image here that supports AWS CLI
     steps:
       - checkout
-      - run: yum install -y tar gzip
+      - run: yum install -y tar gzip npm
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -270,7 +270,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install -y tar gzip ansible 
+            yum install -y tar gzip ansible  npm
       - attach_workspace:
           at: ~/
       - run:
