@@ -219,6 +219,7 @@ jobs:
       - run:
           name: Run migrations
           command: |
+            exit 0 #REMOVE before SUBMIT
             cd backend
             npm install
             #npm run build
