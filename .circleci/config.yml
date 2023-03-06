@@ -368,7 +368,8 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name InitialStack \
-            --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
+            --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+            --tags project=udapeople
             # your code here
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
@@ -386,14 +387,22 @@ jobs:
           name: Get old stack workflow id
           command: |
             # your code here
-            export OldWorkflowID="the id here"
+            export OLD_WORKFLOW_ID=$(aws cloudformation \
+            list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+            --output text)
+            export OldWorkflowID="OldWorkflowID is $OLD_WORKFLOW_ID"
             export STACKS=[] #put the list of stacks here
       - run:
           name: Remove old stacks and files
           command: |
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
             then
-              # your code here
+              echo "Deleting OLD stacks"
+              aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
+              aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
+              aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
+            else
+              echo "Nothing to cleanup"
             fi
             
 
