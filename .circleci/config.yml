@@ -11,10 +11,10 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
+            aws s3 rm s3://udapeople-<<parameters.workflow_id>> --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
             aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
-            aws s3 rm s3://udapeople-<<parameters.workflow_id>> --recursive
-            
+
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -27,9 +27,9 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl --insecure  https://kvdb.io/UngyjmHCVVLPyEDeWCAyMP/migration_<< parameters.workflow_id >>)
+            SUCCESS=$(curl --insecure  https://kvdb.io/UngyjmHCVVLPyEDeWCAyMP/migration_<<parameters.workflow_id>>)
             echo $(SUCCESS)
-            if(( $SUCCESS==1 )); 
+            if (( $SUCCESS == 1 )); 
             then
               cd ~/project/backend
               npm install
@@ -219,14 +219,16 @@ jobs:
       - run:
           name: Run migrations
           command: |
+            pwd
             cd backend
+            pwd
             npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
           name: Send migration results to kvdb bucket
           command: |
-            if grep -q "has been executed successfully." ./backend/migrations_dump.txt
+            if grep -q "has been executed successfully." migrations_dump.txt
             then
               # Using KVDB for sending success
               curl https://kvdb.io/UngyjmHCVVLPyEDeWCAyMP/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
