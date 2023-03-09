@@ -244,9 +244,11 @@ jobs:
       - run:
           name: Send migration results to kvdb bucket
           command: |
+            grep "has been executed successfully." backend/migrations_dump.txt
             if grep -q "has been executed successfully." backend/migrations_dump.txt
             then
               # Using KVDB for sending success flag
+              echo "Inside If loop for KVDB"
               curl https://kvdb.io/UngyjmHCVVLPyEDeWCAyMP/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
             # Your code here below
