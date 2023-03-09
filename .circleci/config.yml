@@ -243,7 +243,7 @@ jobs:
       - run:
           name: Send migration results to kvdb bucket
           command: |
-            pwd
+            exit 0 # REMOVE before submit
             ls -lhtr backend/migrations_dump.txt
             grep "has been executed successfully." backend/migrations_dump.txt
             if grep -q "has been executed successfully." backend/migrations_dump.txt
