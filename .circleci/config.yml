@@ -11,6 +11,7 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
+            echo "Destroying environment: <<parameters.workflow_id>>"
             aws s3 rm s3://udapeople-<<parameters.workflow_id>> --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflow_id>>
             aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflow_id>>
@@ -405,11 +406,15 @@ jobs:
           name: Get old stack workflow id
           command: |
             # your code here
-            export OLD_WORKFLOW_ID=$(aws cloudformation \
-            list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-            --output text)
-            export OldWorkflowID="OldWorkflowID is $OLD_WORKFLOW_ID"
+            export STACKS=($(aws cloudformation list-stacks \
+              --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --output text))
+            echo Stack names: "${STACKS[@]}"
+            export OLD_WORKFLOW_ID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --output text)
+            echo OldWorkflowID="OldWorkflowID is $OLD_WORKFLOW_ID"
             export STACKS=[] #put the list of stacks here
+            echo Stack names: "${STACKS[@]}"
       - run:
           name: Remove old stacks and files
           command: |
