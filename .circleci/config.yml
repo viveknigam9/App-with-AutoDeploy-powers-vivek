@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.12.1
+
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -28,7 +31,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            export SUCCESS=$(curl --insecure  https://kvdb.io/UngyjmHCVVLPyEDeWCAyMP/migration_<<parameters.workflow_id>>)
+            export SUCCESS=$(curl -s --insecure  https://kvdb.io/UngyjmHCVVLPyEDeWCAyMP/migration_<<parameters.workflow_id>>)
             echo $SUCCESS
             if (( $SUCCESS == 1 )); 
             then
@@ -349,7 +352,7 @@ jobs:
             BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters Name=tag:aws:cloudformation:stack-name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-            if curl "${API_URL}/api/status" | grep "ok"
+            if curl -s "${API_URL}/api/status" | grep "ok"
             then
               return 0
             else
@@ -422,9 +425,9 @@ jobs:
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
             then
               echo "Deleting OLD stacks"
-              aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
-              aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
-              aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
+              #aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
+              #aws cloudformation delete-stack --stack-name udapeople-backend-${OldWorkflowID}
+              #aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
             else
               echo "Nothing to cleanup"
             fi
