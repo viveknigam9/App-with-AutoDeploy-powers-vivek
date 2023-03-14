@@ -238,7 +238,7 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            exit 0 # REMOVE before submit
+            #exit 0 # REMOVE before submit
             cd backend
             npm install
             npm run migrations > migrations_dump.txt
@@ -246,14 +246,14 @@ jobs:
       - run:
           name: Send migration results to kvdb bucket
           command: |
-            exit 0 # REMOVE before submit
+            #exit 0 # REMOVE before submit
             ls -lhtr backend/migrations_dump.txt
             grep "has been executed successfully." backend/migrations_dump.txt
             if grep -q "has been executed successfully." backend/migrations_dump.txt
             then
               # Using KVDB for sending success flag
               echo "Inside If loop for KVDB"
-              curl https://kvdb.io/UngyjmHCVVLPyEDeWCAyMP/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl https://kvdb.io/UngyjmHCVVLPyEDeWCAyMP/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
             # Your code here below
       - destroy-environment:
@@ -372,10 +372,10 @@ jobs:
             fi   
             # your code here
       # Here's where you will add some code to rollback on failure  
-      - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-      - revert-migrations:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      #- destroy-environment:
+      #workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      #- revert-migrations:
+      #workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   cloudfront-update:
     docker:
