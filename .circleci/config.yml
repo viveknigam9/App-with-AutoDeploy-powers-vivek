@@ -304,7 +304,6 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - '41:95:01:07:a8:e5:26:80:47:4b:96:00:21:36:c1:b0'
-            #- 'b1:53:e8:41:77:08:4a:fb:cd:b5:99:e9:83:69:6c:84'
       - run:
           name: Install dependencies
           command: |
@@ -371,12 +370,11 @@ jobs:
             else
               return 1
             fi   
-            # your code here
       # Here's where you will add some code to rollback on failure  
-      #- destroy-environment:
-      #workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-      #- revert-migrations:
-      #workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   cloudfront-update:
     docker:
