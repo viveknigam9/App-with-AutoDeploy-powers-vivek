@@ -246,7 +246,7 @@ jobs:
       - run:
           name: Send migration results to kvdb bucket
           command: |
-            #exit 0 # REMOVE before submit
+            exit 0 # REMOVE before submit
             ls -lhtr backend/migrations_dump.txt
             grep "has been executed successfully." backend/migrations_dump.txt
             if grep -q "has been executed successfully." backend/migrations_dump.txt
@@ -255,7 +255,7 @@ jobs:
               echo "Inside If loop for KVDB"
               curl --insecure https://kvdb.io/UngyjmHCVVLPyEDeWCAyMP/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
-            # Your code here below
+            # Your code here below postgres.chjsdxl7nn8y.us-east-1.rds.amazonaws.com
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
