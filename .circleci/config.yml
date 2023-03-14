@@ -200,6 +200,7 @@ jobs:
           name: Configure server
           command: |
             echo ENVIRONMENT=production > backend/.env
+            echo VERSION=1 > backend/.env
             echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> backend/.env
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> backend/.env
             echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> backend/.env
@@ -238,7 +239,7 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            #exit 0 # REMOVE before submit
+            exit 0 # REMOVE before submit
             cd backend
             npm install
             npm run migrations > migrations_dump.txt
