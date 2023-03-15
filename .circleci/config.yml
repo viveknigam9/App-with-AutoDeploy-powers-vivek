@@ -249,7 +249,7 @@ jobs:
               echo "Inside If loop for KVDB"
               curl --insecure https://kvdb.io/UngyjmHCVVLPyEDeWCAyMP/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             else
-              return 0
+              exit 0
             fi
             # Your code here below postgres.chjsdxl7nn8y.us-east-1.rds.amazonaws.com
       - destroy-environment:
