@@ -1,46 +1,38 @@
 ---
-- name: "upgrade packages."
-  become: true
+- name: Update and upgrade packages
+  become: yes
   apt:
-    upgrade: "yes"
-- name: "install dependencies."
-  become: true
+    upgrade: yes
+    # update_cache: true
+    cache_valid_time: 86400
+
+- name: Remove unuse dependencies
+  become: yes
   apt:
-    name: ["nodejs",  "npm"]
+    autoremove: yes
+
+- name: Install dependencies
+  become: yes
+  apt: 
+    name: ['nodejs', 'npm']
     state: latest
-    update_cache: yes
-- name: "install pm2"
-  become: true
+    # update_cahche: yes
+
+- name: Install pm2
+  become: yes
   npm:
     name: pm2
     global: yes
     production: yes
-    state: present
-- name: Copy files
-  become: true
-  copy:
-    src: /root/project/artifact.tar.gz
-    dest: /home/ubuntu/artifact.tar.gz
-- name: Unarchive
-  become: true
-  shell : |
-    cd /home/ubuntu/
-    tar xvzf artifact.tar.gz -C .
-- name: "run server"
-  become: true
-  shell : |
-    cd /home/ubuntu/
-    npm install
-    pm2 stop default
+
+- name: Extract artifacts
+  become: yes
+  unarchive:
+    src: files/artifact.tar.gz
+    dest: .
+
+- name: Start app
+  become: yes
+  shell: |
+    pm2 delete all
     pm2 start npm -- start
-  environment:
-    ENVIRONMENT: production
-    TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
-    TYPEORM_MIGRATIONS_DIR: "./migrations"
-    TYPEORM_MIGRATIONS: "./migrations/*.js"
-    TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
-    TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
-    TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
-    TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
-    TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
-    TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
